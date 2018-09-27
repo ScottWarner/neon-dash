@@ -740,16 +740,20 @@ export class DatasetService {
                 });
 
                 if (table) {
-                    let hasField = {};
-                    table.fields.forEach((field: FieldMetaData) => {
-                        hasField[field.columnName] = true;
-                    });
-                    tableNamesAndFieldNames[tableName].forEach((fieldName: string) => {
-                        if (!hasField[fieldName]) {
-                            let newField: FieldMetaData = new FieldMetaData(fieldName, fieldName, false);
-                            table.fields.push(newField);
-                        }
-                    });
+                    // Only fetch all fields if none were specified, or if the fetchNewFields
+                    // flag was set
+                    if (table.fields.length === 0 || table.fetchNewFields) {
+                        let hasField = {};
+                        table.fields.forEach((field: FieldMetaData) => {
+                            hasField[field.columnName] = true;
+                        });
+                        tableNamesAndFieldNames[tableName].forEach((fieldName: string) => {
+                            if (!hasField[fieldName]) {
+                                let newField: FieldMetaData = new FieldMetaData(fieldName, fieldName, false);
+                                table.fields.push(newField);
+                            }
+                        });
+                    }
                     pendingTypesRequests++;
                     connection.getFieldTypes(database.name, table.name, (types) => {
                         for (let f of table.fields) {
