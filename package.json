@@ -61,6 +61,7 @@
     "moment": "2.18.1",
     "moment-timezone": "0.5.13",
     "neon-framework": "1.3.5",
+    "ngx-gauge": "^1.0.0-beta.4",
     "node-uuid": "1.4.8",
     "reflect-metadata": "0.1.10",
     "requirejs": "2.3.5",

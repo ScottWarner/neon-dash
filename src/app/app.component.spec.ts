@@ -61,6 +61,7 @@ import { ColorSchemeService } from './services/color-scheme.service';
 import { NgGridModule } from 'angular2-grid';
 
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { NgxGaugeModule } from 'ngx-gauge';
 import { AppMaterialModule } from './app.material.module';
 import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -71,6 +72,7 @@ import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MediaViewerComponent } from './components/media-viewer/media-viewer.component';
 import { ThumbnailGridComponent } from './components/thumbnail-grid/thumbnail-grid.component';
+import { RemovedStatsComponent } from './components/removed-stats/removed-stats.component';
 
 describe('App: NeonGtd', () => {
     let fixture: ComponentFixture<AppComponent>;
@@ -97,6 +99,7 @@ describe('App: NeonGtd', () => {
                 MapComponent,
                 MediaViewerComponent,
                 NetworkGraphComponent,
+                RemovedStatsComponent,
                 SampleComponent,
                 ScatterPlotComponent,
                 SimpleFilterComponent,
@@ -114,6 +117,7 @@ describe('App: NeonGtd', () => {
                 FormsModule,
                 AppMaterialModule,
                 NgxChartsModule,
+                NgxGaugeModule,
                 NgGridModule,
                 NgxGraphModule,
                 NgxDatatableModule,

@@ -71,6 +71,7 @@ import { VisualizationInjectorComponent } from './components/visualization-injec
 import { WikiViewerComponent } from './components/wiki-viewer/wiki-viewer.component';
 
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { NgxGaugeModule } from 'ngx-gauge';
 import { AppMaterialModule } from './app.material.module';
 import { SimpleFilterComponent } from './components/simple-filter/simple-filter.component';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
@@ -80,6 +81,7 @@ import { ThumbnailGridComponent } from './components/thumbnail-grid/thumbnail-gr
 
 import { CustomConnectionComponent } from './components/custom-connection/custom-connection.component';
 import { CustomConnectionSimpleSetupStepComponent } from './components/custom-connection/simple-setup.component';
+import { RemovedStatsComponent } from './components/removed-stats/removed-stats.component';
 
 export function getAppConfig() {
     /* tslint:disable:no-string-literal */
@@ -111,6 +113,7 @@ export function getAppConfig() {
         MapComponent,
         MediaViewerComponent,
         NetworkGraphComponent,
+        RemovedStatsComponent,
         SampleComponent,
         ScatterPlotComponent,
         SimpleFilterComponent,
@@ -133,6 +136,7 @@ export function getAppConfig() {
         HttpClientModule,
         NgGridModule,
         NgxDatatableModule,
+        NgxGaugeModule,
         BrowserAnimationsModule,
         AppMaterialModule,
         NgxGraphModule,

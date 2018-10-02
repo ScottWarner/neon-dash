@@ -35,6 +35,7 @@ import { WikiViewerComponent } from '../wiki-viewer/wiki-viewer.component';
 import { NeonGridItem } from '../../neon-grid-item';
 import { VisualizationService } from '../../services/visualization.service';
 import { ThumbnailGridComponent } from '../thumbnail-grid/thumbnail-grid.component';
+import { RemovedStatsComponent } from '../removed-stats/removed-stats.component';
 
 @Component({
     selector: 'app-visualization-injector',
@@ -48,6 +49,7 @@ import { ThumbnailGridComponent } from '../thumbnail-grid/thumbnail-grid.compone
         MapComponent,
         MediaViewerComponent,
         NetworkGraphComponent,
+        RemovedStatsComponent,
         SampleComponent,
         ScatterPlotComponent,
         StackedTimelineComponent,
@@ -121,6 +123,7 @@ export class VisualizationInjectorComponent {
             case 'map': return MapComponent;
             case 'mediaViewer': return MediaViewerComponent;
             case 'networkGraph' : return NetworkGraphComponent;
+            case 'removedStats': return RemovedStatsComponent;
             case 'sample': return SampleComponent;
             case 'scatterPlot': return ScatterPlotComponent;
             case 'stackedTimeline': return StackedTimelineComponent;

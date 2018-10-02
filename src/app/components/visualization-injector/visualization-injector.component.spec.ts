@@ -46,6 +46,8 @@ import { NgxGraphModule } from '@swimlane/ngx-graph';
 import { MediaViewerComponent } from '../media-viewer/media-viewer.component';
 import { ThumbnailGridComponent } from '../thumbnail-grid/thumbnail-grid.component';
 import { initializeTestBed } from '../../../testUtils/initializeTestBed';
+import { RemovedStatsComponent } from '../removed-stats/removed-stats.component';
+import { NgxGaugeModule } from 'ngx-gauge';
 
 describe('Component: VisualizationInjector', () => {
 
@@ -63,6 +65,7 @@ describe('Component: VisualizationInjector', () => {
             MapComponent,
             MediaViewerComponent,
             NetworkGraphComponent,
+            RemovedStatsComponent,
             SampleComponent,
             ScatterPlotComponent,
             StackedTimelineComponent,
@@ -80,6 +83,7 @@ describe('Component: VisualizationInjector', () => {
             FormsModule,
             NgxDatatableModule,
             NgxGraphModule,
+            NgxGaugeModule,
             BrowserAnimationsModule
         ]
     });

@@ -49,6 +49,8 @@ import { ChartComponent } from '../chart/chart.component';
 import { MediaViewerComponent } from '../media-viewer/media-viewer.component';
 import { ThumbnailGridComponent } from '../thumbnail-grid/thumbnail-grid.component';
 import { initializeTestBed } from '../../../testUtils/initializeTestBed';
+import { RemovedStatsComponent } from '../removed-stats/removed-stats.component';
+import { NgxGaugeModule } from 'ngx-gauge';
 
 describe('Component: VisualizationContainer', () => {
     let testConfig: NeonGTDConfig = new NeonGTDConfig();
@@ -70,6 +72,7 @@ describe('Component: VisualizationContainer', () => {
             MapComponent,
             MediaViewerComponent,
             NetworkGraphComponent,
+            RemovedStatsComponent,
             SampleComponent,
             ScatterPlotComponent,
             StackedTimelineComponent,
@@ -91,6 +94,7 @@ describe('Component: VisualizationContainer', () => {
             AppMaterialModule,
             FormsModule,
             NgxDatatableModule,
+            NgxGaugeModule,
             NgxGraphModule,
             BrowserAnimationsModule
         ]
