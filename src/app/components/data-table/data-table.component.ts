@@ -167,8 +167,6 @@ export class DataTableComponent extends BaseNeonComponent implements OnInit, OnD
     }
 
     initializeHeadersFromExceptionsToStatus() {
-        let initialHeaderLimit = 25;
-        let numHeaders = 0;
         let orderedHeaders = [];
         let unorderedHeaders = [];
         let show = (this.options.allColumnStatus === 'show');
@@ -179,7 +177,7 @@ export class DataTableComponent extends BaseNeonComponent implements OnInit, OnD
                 orderedHeaders.push({
                     prop: fieldObject.columnName,
                     name: fieldObject.prettyName,
-                    active: !show && orderedHeaders.length < initialHeaderLimit,
+                    active: !show,
                     style: {},
                     width: this.DEFAULT_COLUMN_WIDTH
                 });
@@ -187,7 +185,7 @@ export class DataTableComponent extends BaseNeonComponent implements OnInit, OnD
                 unorderedHeaders.push({
                     prop: fieldObject.columnName,
                     name: fieldObject.prettyName,
-                    active: show && unorderedHeaders.length < initialHeaderLimit,
+                    active: show,
                     style: {},
                     width: this.DEFAULT_COLUMN_WIDTH
                 });
