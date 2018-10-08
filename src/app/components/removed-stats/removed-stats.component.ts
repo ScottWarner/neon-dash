@@ -90,11 +90,13 @@ export class RemovedStatsComponent extends BaseNeonComponent implements OnInit, 
     public termsCount: number = 0;
     public textColor: string = '#111';
 
-    public docCount: number = 0;
-    public removedCount: number = 0;
-    public repostsCount: number = 0;
-    public repostsRemovedCount: number = 0;
-    public removedPercent: number = 0;
+    public counts = {
+        docs: 0,
+        removed: 0,
+        reposts: 0,
+        repostsRemoved: 0,
+        removedPercent: 0
+    };
 
     public foregroundColor = '#27607e';
     public backgroundColor = '#c5bfbf';
@@ -163,7 +165,7 @@ export class RemovedStatsComponent extends BaseNeonComponent implements OnInit, 
     }
 
     refreshVisualization() {
-        // TODO
+        this.startLoading();
     }
 
     getFilterText(filter) {
@@ -189,11 +191,6 @@ export class RemovedStatsComponent extends BaseNeonComponent implements OnInit, 
             .selectFrom(this.options.database.name, this.options.table.name).where(this.createClause())
             .aggregate(neonVariables.COUNT, '*', '_docCount');
 
-        let ignoreFilters = this.getFiltersToIgnore();
-        if (ignoreFilters && ignoreFilters.length) {
-            countQuery.ignoreFilters(ignoreFilters);
-        }
-
         this.executeQuery(countQuery);
     }
 
@@ -203,11 +200,6 @@ export class RemovedStatsComponent extends BaseNeonComponent implements OnInit, 
         let countQuery = new neon.query.Query()
             .selectFrom(this.options.database.name, this.options.table.name).where(this.createClause())
             .aggregate(neonVariables.SUM, 'reposts_count', '_repostsCount');
-
-        let ignoreFilters = this.getFiltersToIgnore();
-        if (ignoreFilters && ignoreFilters.length) {
-            countQuery.ignoreFilters(ignoreFilters);
-        }
 
         this.executeQuery(countQuery);
     }
@@ -220,11 +212,6 @@ export class RemovedStatsComponent extends BaseNeonComponent implements OnInit, 
             .selectFrom(this.options.database.name, this.options.table.name).where(clause)
             .aggregate(neonVariables.SUM, 'reposts_count', '_repostsRemovedCount');
 
-        let ignoreFilters = this.getFiltersToIgnore();
-        if (ignoreFilters && ignoreFilters.length) {
-            countQuery.ignoreFilters(ignoreFilters);
-        }
-
         this.executeQuery(countQuery);
     }
 
@@ -234,19 +221,26 @@ export class RemovedStatsComponent extends BaseNeonComponent implements OnInit, 
      * @return {any}
      */
     createClause(additionalClause?: any): any {
-        let clauses = [neon.query.where(this.options.removedField, '!=', null)];
+        // console.log('Creating clauses');
+        let clauses = [];
 
         // Apply the additional clause, if needed
         if (additionalClause) {
             clauses.push(additionalClause);
         }
 
-        if (this.options.filter) {
-            clauses.push(neon.query.where(this.options.filter.lhs, this.options.filter.operator, this.options.filter.rhs));
+        let filters = this.filterService.getFiltersForFields(this.options.database.name, this.options.table.name);
+
+        if (filters && filters.length > 0) {
+            for (let filter of filters) {
+                if (filter.filter.whereClause) {
+                    clauses.push(filter.filter.whereClause);
+                }
+            }
         }
 
-        if (this.hasUnsharedFilter()) {
-            clauses.push(neon.query.where(this.options.unsharedFilterField.columnName, '=', this.options.unsharedFilterValue));
+        if (clauses.length === 0) {
+            return null;
         }
 
         return clauses.length > 1 ? neon.query.and.apply(neon.query, clauses) : clauses[0];
@@ -266,11 +260,6 @@ export class RemovedStatsComponent extends BaseNeonComponent implements OnInit, 
             .selectFrom(this.options.database.name, this.options.table.name).where(clauses)
             .aggregate(neonVariables.COUNT, '*', '_removedCount');
 
-        let ignoreFilters = this.getFiltersToIgnore();
-        if (ignoreFilters && ignoreFilters.length) {
-            countQuery.ignoreFilters(ignoreFilters);
-        }
-
         return countQuery;
     }
 
@@ -281,36 +270,27 @@ export class RemovedStatsComponent extends BaseNeonComponent implements OnInit, 
      * @override
      */
     getFiltersToIgnore() {
-        let neonFilters = this.filterService.getFiltersForFields(this.options.database.name, this.options.table.name,
-            [this.options.dataField.columnName]);
-
-        let ignoredFilterIds = neonFilters.filter((neonFilter) => {
-            return !neonFilter.filter.whereClause.whereClauses;
-        }).map((neonFilter) => {
-            return neonFilter.id;
-        });
-
-        return ignoredFilterIds.length ? ignoredFilterIds : null;
+        return null;
     }
 
     onQuerySuccess(response): void {
         if (response.data.length === 1 && response.data[0]._docCount !== undefined) {
-            this.docCount = response.data[0]._docCount;
+            this.counts.docs = response.data[0]._docCount;
             this.loaded.docCount = true;
 
             // console.log('Got doc count: ' + this.docCount);
         } else if (response.data.length === 1 && response.data[0]._removedCount !== undefined) {
-            this.removedCount = response.data[0]._removedCount;
+            this.counts.removed = response.data[0]._removedCount;
             this.loaded.removedCount = true;
 
             // console.log('Got removed count: ' + this.removedCount);
         } else if (response.data.length === 1 && response.data[0]._repostsCount !== undefined) {
-            this.repostsCount = response.data[0]._repostsCount;
+            this.counts.reposts = response.data[0]._repostsCount;
             this.loaded.repostCount = true;
 
             // console.log('Got repost count: ' + this.repostsCount);
         } else if (response.data.length === 1 && response.data[0]._repostsRemovedCount !== undefined) {
-            this.repostsRemovedCount = response.data[0]._repostsRemovedCount;
+            this.counts.repostsRemoved = response.data[0]._repostsRemovedCount;
             this.loaded.repostRemoved = true;
 
             // console.log('Got repost removed count: ' + this.repostsRemovedCount);
@@ -332,11 +312,12 @@ export class RemovedStatsComponent extends BaseNeonComponent implements OnInit, 
         }
 
         // Calculate removed percent
-        if (this.docCount > 0) {
-            if (this.removedCount === 0) {
-                this.removedPercent = 0;
+        if (this.counts.docs > 0) {
+            if (this.counts.removed === 0) {
+                this.counts.removedPercent = 0;
             } else {
-                this.removedPercent = Math.floor(this.removedCount / this.docCount * 100);
+                this.counts.removedPercent =
+                Math.floor(this.counts.removed / this.counts.docs * 100);
             }
         }
     }
@@ -346,6 +327,11 @@ export class RemovedStatsComponent extends BaseNeonComponent implements OnInit, 
         for (let key in this.loaded) {
             if (this.loaded[key]) {
                 this.loaded[key] = false;
+            }
+        }
+        for (let key in this.counts) {
+            if (this.counts[key]) {
+                this.counts[key] = 0;
             }
         }
 
@@ -363,6 +349,11 @@ export class RemovedStatsComponent extends BaseNeonComponent implements OnInit, 
         this.isLoading = stillLoading;
     }
 
+    handleFiltersChangedEvent() {
+        // Reload everything on filters changed
+        this.startLoading();
+    }
+
     setupFilters() {
         // Get neon filters
         // See if any neon filters are local filters and set/clear appropriately
@@ -373,6 +364,14 @@ export class RemovedStatsComponent extends BaseNeonComponent implements OnInit, 
         for (let neonFilter of neonFilters) {
             if (!neonFilter.filter.whereClause.whereClauses) {
                 let field = this.options.findField(neonFilter.filter.whereClause.lhs);
+                if (!field) {
+                    field = {
+                        columnName: neonFilter.filter.whereClause.lhs,
+                        prettyName: neonFilter.filter.whereClause.lhs,
+                        hide: false,
+                        type: ''
+                    };
+                }
                 let value = neonFilter.filter.whereClause.rhs;
                 let filter = {
                     id: neonFilter.id,
@@ -410,10 +409,10 @@ export class RemovedStatsComponent extends BaseNeonComponent implements OnInit, 
      * @override
      */
     getButtonText() {
-        if (!this.docCount) {
+        if (!this.counts.docs) {
             return 'No Data';
         }
-        return 'Total ' + super.prettifyInteger(this.docCount);
+        return 'Total ' + super.prettifyInteger(this.counts.docs);
     }
 
     /**

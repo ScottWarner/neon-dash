@@ -94,7 +94,7 @@
             <mat-grid-tile>
                 <ngx-gauge [type]="'arch'"
                     [label]="'Average Removed'"
-                    [value]="removedPercent"
+                    [value]="counts.removedPercent"
                     [append]="'%'"
                     [thick]="'12'"
                     [cap]="'round'"
@@ -107,15 +107,15 @@
 
             <mat-grid-tile>
                     <table style="border: 0">
-                        <tr><th>Total Posts:</th><td>{{ docCount | number }}</td></tr>
-                        <tr><th>Total Removed:</th><td>{{ removedCount | number }}</td></tr>
+                        <tr><th>Total Posts:</th><td>{{ counts.docs | number }}</td></tr>
+                        <tr><th>Total Removed:</th><td>{{ counts.removed | number }}</td></tr>
                     </table>
             </mat-grid-tile>
 
             <mat-grid-tile>
                 <table style="border: 0">
-                    <tr><th>Total Reposts:</th><td>{{ repostsCount | number }}</td></tr>
-                    <tr><th>Reposts Removed:</th><td>{{ repostsRemovedCount | number }}</td></tr>
+                    <tr><th>Total Reposts:</th><td>{{ counts.reposts | number }}</td></tr>
+                    <tr><th>Reposts Removed:</th><td>{{ counts.repostsRemoved | number }}</td></tr>
                 </table>
         </mat-grid-tile>
 
