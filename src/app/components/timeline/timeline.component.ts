@@ -340,7 +340,7 @@ export class TimelineComponent extends BaseNeonComponent implements OnInit, OnDe
         for (let neonFilter of neonFilters) {
             // The data we want is in the whereClause's subclauses
             let whereClause = neonFilter.filter.whereClause;
-            if (whereClause && whereClause.whereClauses.length === 2) {
+            if (whereClause && whereClause.whereClauses && whereClause.whereClauses.length === 2) {
                 ignoredFilterIds.push(neonFilter.id);
             }
         }
@@ -528,7 +528,7 @@ export class TimelineComponent extends BaseNeonComponent implements OnInit, OnDe
         for (let neonFilter of neonFilters) {
             // The data we want is in the whereClause's subclauses
             let whereClause = neonFilter.filter.whereClause;
-            if (whereClause && whereClause.whereClauses.length === 2) {
+            if (whereClause && whereClause.whereClauses && whereClause.whereClauses.length === 2) {
                 let field = this.options.findField(neonFilter.filter.whereClause[0].lhs);
                 this.addLocalFilter(neonFilter.id, field.columnName, field.prettyName, whereClause.whereClauses[0].rhs,
                     whereClause.whereClauses[1].rhs);

@@ -139,7 +139,9 @@ export class FilterService {
      */
     public getFiltersForFields(database: string, table: string, fields: string[] = []) {
         let checkClauses = (clause) => {
-            if (clause.type === 'where' && (!fields.length || fields.indexOf(clause.lhs) >= 0)) {
+            if (clause.operator === 'string') {
+                return true;
+            } else if (clause.type === 'where' && (!fields.length || fields.indexOf(clause.lhs) >= 0)) {
                 return true;
             } else if (clause.type !== 'where') {
                 for (let whereClause of clause.whereClauses) {
